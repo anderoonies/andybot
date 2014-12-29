@@ -3,4 +3,4 @@ andybot
 
 Twitter bot that makes fun of me using Markov chaining
 
-twitter.com/ando_3000
+<a href="twitter.com/ando_3000">twitter.com/ando_3000</a>
