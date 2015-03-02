@@ -1,3 +1,19 @@
 /bin/sh: /Users/andybayer/ANDY_3000/post.py: Permission denied
 6 celebrities who still play neopets
 watch sleepless in seattle rises from the food court into a few laws
+i know you but youre an asshole
+-----
+really like ffox 35 is going to use your laptop near me #sleepy #iwantchickentenders
+-----
+his body is a good lesson is the kind of independent clause that gets you excited for me because i am still afraid of taking my shoes off but they were about to score
+-----
+Traceback (most recent call last):
+  File "/Users/andybayer/ANDY_3000/post.py", line 13, in <module>
+    status = api.PostUpdate(tweet)
+  File "/Library/Python/2.7/site-packages/twitter/api.py", line 881, in PostUpdate
+    data = self._ParseAndCheckTwitter(json.content)
+  File "/Library/Python/2.7/site-packages/twitter/api.py", line 3413, in _ParseAndCheckTwitter
+    self._CheckForTwitterError(data)
+  File "/Library/Python/2.7/site-packages/twitter/api.py", line 3440, in _CheckForTwitterError
+    raise TwitterError(data['errors'])
+twitter.error.TwitterError: [{u'message': u'Status is over 140 characters.', u'code': 186}]

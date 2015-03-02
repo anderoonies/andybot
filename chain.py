@@ -35,7 +35,7 @@ class Markov():
 			else:
 				self.dict[key] = [w3]
 
-	def make_tweet(self, size=140):
+	def make_tweet(self, size=140, topic=""):
 		tweet=""
 		w1_index = random.randint(0, len(self.words) - 3)
 		word1 = self.words[w1_index]
