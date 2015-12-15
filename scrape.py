@@ -1,6 +1,6 @@
 import twitter
 import string
-import json
+import pickle
 from secret import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
 api = twitter.Api(consumer_key=CONSUMER_KEY, consumer_secret=CONSUMER_SECRET, 
 					access_token_key=ACCESS_TOKEN, access_token_secret=ACCESS_TOKEN_SECRET)
@@ -9,8 +9,7 @@ tweet_file = open('tweets.txt', 'w')
 
 def fetch():
     data = {}
-    tweet_data = {}
-    tweet_data['data'] = []
+    tweets = []
     max_id = None
     total = 0
     while True:
@@ -28,7 +27,8 @@ def fetch():
                                                       .replace('&lt;','<') \
                                                       .replace('&gt;','>')
                     s = ''.join(ch for ch in s if ch not in exclude)
-                    tweet_data['data'].append(s)
+                    s += '|'
+                    tweets.append(s)
                 newCount += 1
         total += newCount
         print "Fetched %d/%d/%d new/old/total." % (
@@ -37,8 +37,7 @@ def fetch():
             break
         max_id = min([s.id for s in statuses]) - 1
 
-    json_data = json.dumps(tweet_data)
-    tweet_file.write(json_data)
+    pickle.dump(tweets, tweet_file)
     return data.values()
 
 fetch()

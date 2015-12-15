@@ -1,21 +1,23 @@
 import random
 import os
-
-
-
-tweets = open('/users/andybayer/ANDY_3000/tweets.txt', 'r').read()
+import pickle
 
 class Markov():
+	def __init__(self):
 
-	def __init__(self, tweets):
+		with open('/users/andybayer/code/ANDY_3000/tweets.txt', 'r') as tweet_file:
+			self.tweets = pickle.load(tweet_file)
 		self.dict = {}
-		self.tweets = tweets
 		self.words = self.make_words()
 		self.populate()
 		self.triples()
 
 	def make_words(self):
-		words = [word for word in tweets.split() if 'http' not in word]
+		words = []
+		for tweet in self.tweets:
+			for word in tweet.split():
+				words.append(word)
+		print words
 		return words
 
 	def triples(self):
@@ -36,26 +38,22 @@ class Markov():
 				self.dict[key] = [w3]
 
 	def make_tweet(self, size=140, topic=""):
-		tweet=""
+		tweet=''
 		w1_index = random.randint(0, len(self.words) - 3)
 		word1 = self.words[w1_index]
-		while not word1.startswith('>'):
-			w1_index = random.randint(0, len(self.words) - 3)
-			word1 = self.words[w1_index]
+		print word1
 		#| is the end of tweet character: keep scanning until we don't have one
 		while word1.endswith('|'):
 			w1_index = random.randint(0, len(self.words)-3)
 			word1 = self.words[w1_index]
 		word1, word2 = self.words[w1_index], self.words[w1_index+1]
-		generated_words = []
-		while (sum(len(i) for i in generated_words)) + len(word1) < size:
-			generated_words.append(word1)
+		generated_words = ''
+		while (len(generated_words) + len(word1) < size):
+			generated_words += word1 + ' '
 			if word1.endswith('|'):
-				if ' '.join(generated_words) not in tweets:
-					return ' '.join(generated_words).replace('|', '').replace('>', '')
+				break
 			word1, word2 = word2, random.choice(self.dict[(word1, word2)])
-		if ' '.join(generated_words) not in tweets:
-					return ' '.join(generated_words).replace('|', '').replace('>', '')
+		return generated_words.replace('|', '')
 
 # for debugging
 # m=Markov(tweets)

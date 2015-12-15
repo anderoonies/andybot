@@ -5,7 +5,7 @@ api = twitter.Api(consumer_key=POST_CONSUMER_KEY, consumer_secret=POST_CONSUMER_
 					access_token_key=POST_ACCESS_TOKEN, access_token_secret=POST_ACCESS_TOKEN_SECRET)
 
 
-m = Markov('tweets.txt')
+m = Markov()
 
 tweet = m.make_tweet()
 print(tweet)
