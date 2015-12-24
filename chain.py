@@ -49,11 +49,16 @@ class Markov():
 		word1, word2 = self.words[w1_index], self.words[w1_index+1]
 		generated_words = ''
 		while (len(generated_words) + len(word1) < size):
-			generated_words += word1 + ' '
+			generated_words += word1
 			if word1.endswith('|'):
 				break
+			else:
+				generated_words += ' '
 			word1, word2 = word2, random.choice(self.dict[(word1, word2)])
-		return generated_words.replace('|', '')
+		if generated_words in self.tweets:
+			return self.make_tweet()
+		else:
+			return generated_words.replace('|', '')
 
 # for debugging
 # m=Markov(tweets)
