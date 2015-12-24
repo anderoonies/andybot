@@ -6,10 +6,15 @@ api = twitter.Api(consumer_key=POST_CONSUMER_KEY, consumer_secret=POST_CONSUMER_
 
 
 m = Markov()
+m.load_triples()
+m.load_tweets()
+
+if len(m.triples) == 0:
+  m.make_words()
+  m.populate()
+  m.store_triples()
 
 tweet = m.make_tweet()
-print(tweet)
-print '-----'
-status = api.PostUpdate(tweet)
-# print status
+print '{}\n----'.format(tweet)
 
+status = api.PostUpdate(tweet)
