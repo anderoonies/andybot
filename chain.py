@@ -2,12 +2,13 @@ import random
 import os
 import pickle
 
-tweet_file_path = '/users/andybayer/code/andybot/tweets.txt'
-triple_file_path = '/users/andybayer/code/andybot/triples.txt'
+tweet_file_path = '/users/andybayer/code/andybot/tweets.pickle'
+triple_file_path = '/users/andybayer/code/andybot/triples.pickle'
 
 class Markov():
   def __init__(self):
     self.dict = {}
+    self.words = []
 
   def store_triples(self):
     with open(triple_file_path, 'w') as triple_file:
@@ -19,7 +20,6 @@ class Markov():
       tweet_file = open(tweet_file_path, 'r')
       self.tweets = pickle.load(tweet_file)
     except (EOFError, IOError):
-      print "wtf"
       self.tweets = []
 
   def load_triples(self):
@@ -53,6 +53,9 @@ class Markov():
         self.dict[key] = [word3]
 
   def make_tweet(self, size=140):
+    if not self.words:
+        self.make_words()
+
     tweet = ''
     word1_index = random.randint(0, len(self.words) - 3)
     word1 = self.words[word1_index]
@@ -68,6 +71,8 @@ class Markov():
     		break
     	else:
     		generated_words += ' '
+
+        print('{}, {} => {}'.format(word1, word2, self.dict[(word1, word2)]))
     	word1, word2 = word2, random.choice(self.dict[(word1, word2)])
     if generated_words in self.tweets:
     	return self.make_tweet()
