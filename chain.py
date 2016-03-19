@@ -1,75 +1,73 @@
-import random
 import os
+import re
 import pickle
+import nltk
+import random
 
-tweet_file_path = '/users/andybayer/code/andybot/tweets.txt'
-triple_file_path = '/users/andybayer/code/andybot/triples.txt'
-
-class Markov():
-  def __init__(self):
-    self.dict = {}
-
-  def store_triples(self):
-    with open(triple_file_path, 'w') as triple_file:
-      pickle.dump(self.triples, triple_file)
-
-  def load_tweets(self):
+def load_tweets():
     # returns a boolean if there was anything loaded
     try:
-      tweet_file = open(tweet_file_path, 'r')
-      self.tweets = pickle.load(tweet_file)
+        tweet_file = open('tweets.pickle', 'r')
+        return pickle.load(tweet_file)
     except (EOFError, IOError):
-      print "wtf"
-      self.tweets = []
+        return None
 
-  def load_triples(self):
+def load_corpus():
     try:
-      triple_file = open(triple_file_path, 'r')
-      self.triples = pickle.load(triple_file)
+        with open('markov_model.pickle', 'r') as f:
+            return pickle.load(f)
     except (EOFError, IOError):
-      self.triples = []
+        return None
 
-  def make_words(self):
-    words = []
-    for tweet in self.tweets:
-      for word in tweet.split():
-        words.append(word)
-    self.words = words
+def make_model():
+    corpus = load_corpus()
+    tweets = load_tweets()
+    if not tweets:
+        return
 
-  def generate_triples(self):
-    if len(self.words) < 3:
-      return
+    if not corpus:
+        corpus = []
+        for tweet in tweets:
+            tweet_tokens = nltk.word_tokenize(tweet.decode('utf-8'))
+            tweet_tags = nltk.pos_tag(tweet_tokens)
+            corpus += [nltk.pos_tag(tweet_tokens)]
 
-    for i in xrange(len(self.words) - 2):
-      yield (self.words[i], self.words[i+1], self.words[i+2])
+    tag_set = nltk.unique_list(tag for sent in corpus for (word,tag) in sent)
+    symbols = nltk.unique_list(word for sent in corpus for (word,tag) in sent)
 
-  def populate(self):
-    # populate the dictionary with keys of two words, values of resulting words
-    for word1, word2, word3 in self.generate_triples():
-      key = (word1, word2)
-      if key in self.dict:
-       	self.dict[key].append(word3)
-      else:
-        self.dict[key] = [word3]
+    trainer = nltk.tag.HiddenMarkovModelTrainer(tag_set, symbols)
 
-  def make_tweet(self, size=140):
+    train_corpus = []
+    test_corpus = []
+    for i in range(len(tweets)):
+        if i % 10:
+            train_corpus += [tweets[i]]
+        else:
+            test_corpus += [tweets[i]]
+
+    save_corpus(corpus)
+    hmm = train_and_test(trainer, tweets)
+    save_model(hmm)
     tweet = ''
-    word1_index = random.randint(0, len(self.words) - 3)
-    word1 = self.words[word1_index]
-    #'|' is the end of tweet character: keep scanning until we don't have one
-    while word1.endswith('|'):
-    	word1_index = random.randint(0, len(self.words) - 3)
-    	word1 = self.words[word1_index]
-    word1, word2 = self.words[word1_index], self.words[word1_index + 1]
-    generated_words = ''
-    while (len(generated_words) + len(word1) < size):
-    	generated_words += word1
-    	if word1.endswith('|'):
-    		break
-    	else:
-    		generated_words += ' '
-    	word1, word2 = word2, random.choice(self.dict[(word1, word2)])
-    if generated_words in self.tweets:
-    	return self.make_tweet()
-    else:
-    	return generated_words.replace('|', '')
+    sample = hmm.random_sample(random.Random(), 20)
+    for word in sample:
+        tweet += word + ' '
+
+def train_and_test(trainer, tweets):
+    seq = [map(lambda x:(x,''), nltk.word_tokenize(tweet.decode('utf-8'))) for tweet in tweets]
+    hmm = trainer.train_unsupervised(seq, max_iterations=5)
+    return hmm
+
+def save_model(model):
+    with open('markov_model.pickle', 'w') as f:
+        pickle.dump(model, f)
+        f.close()
+
+def save_corpus(corpus):
+    with open('corpus.pickle', 'w') as f:
+        pickle.dump(corpus, f)
+        f.close()
+
+
+if __name__ == '__main__':
+    print make_model()
