@@ -17,4 +17,4 @@ if len(m.triples) == 0:
 tweet = m.make_tweet()
 print '{}\n----'.format(tweet)
 
-# status = api.PostUpdate(tweet)
+status = api.PostUpdate(tweet)
