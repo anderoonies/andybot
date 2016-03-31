@@ -1,4 +1,5 @@
 *.pyc
 secret.py
-tweets.txt
+tweets.pickle
+triples.pickle
 cron.log
