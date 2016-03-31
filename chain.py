@@ -27,7 +27,7 @@ class Markov():
       triple_file = open(triple_file_path, 'r')
       self.dict = pickle.load(triple_file)
     except (EOFError, IOError):
-      self.dict = []
+      self.dict = {}
 
   def make_words(self):
     words = []

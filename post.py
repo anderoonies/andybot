@@ -9,7 +9,7 @@ m = Markov()
 m.load_triples()
 m.load_tweets()
 
-if len(m.triples) == 0:
+if len(m.dict) == 0:
   m.make_words()
   m.populate()
   m.store_triples()
