@@ -2,8 +2,8 @@ import random
 import os
 import pickle
 
-tweet_file_path = '/users/andybayer/code/andybot/tweets.pickle'
-triple_file_path = '/users/andybayer/code/andybot/triples.pickle'
+tweet_file_path = os.path.join(os.path.dirname(__file__), 'tweets.pickle')
+triple_file_path	 = os.path.join(os.path.dirname(__file__), 'triples.pickle')
 
 class Markov():
   def __init__(self):
