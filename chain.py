@@ -12,7 +12,7 @@ class Markov():
 
   def store_triples(self):
     with open(triple_file_path, 'w') as triple_file:
-      pickle.dump(self.triples, triple_file)
+      pickle.dump(self.dict, triple_file)
 
   def load_tweets(self):
     # returns a boolean if there was anything loaded
@@ -25,9 +25,9 @@ class Markov():
   def load_triples(self):
     try:
       triple_file = open(triple_file_path, 'r')
-      self.triples = pickle.load(triple_file)
+      self.dict = pickle.load(triple_file)
     except (EOFError, IOError):
-      self.triples = []
+      self.dict = []
 
   def make_words(self):
     words = []
