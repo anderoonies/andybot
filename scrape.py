@@ -34,7 +34,7 @@ def fetch():
     return data.values()
 
 def format_tweet(tweet):
-  exclude_chars = ['"', ','] # characters to exclude
+  exclude_chars = ['"'] # characters to exclude
 
   tweet = tweet.text.encode('utf-8').replace('&amp;','&') \
                                     .replace('&lt;','<') \
