@@ -2,7 +2,7 @@ import twitter
 import string
 import pickle
 from secret import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
-api = twitter.Api(consumer_key=CONSUMER_KEY, consumer_secret=CONSUMER_SECRET, 
+api = twitter.Api(consumer_key=CONSUMER_KEY, consumer_secret=CONSUMER_SECRET,
 					access_token_key=ACCESS_TOKEN, access_token_secret=ACCESS_TOKEN_SECRET)
 
 
@@ -13,8 +13,8 @@ def fetch():
     total = 0
     exclude_words = ['My Top'] # words whose tweets should be excluded
     while True:
-      statuses = api.GetUserTimeline(api.GetUser, count=200, 
-                                     max_id=max_id, include_rts=False, 
+      statuses = api.GetUserTimeline(api.GetUser, count=200,
+                                     max_id=max_id, include_rts=False,
                                      exclude_replies=True)
       new_count = ignored_count = 0
       for s in statuses:
@@ -44,6 +44,6 @@ def format_tweet(tweet):
   return tweet
 
 if __name__ == '__main__':
-  tweet_file = open('tweets.txt', 'w')
+  tweet_file = open('tweets.pickle', 'w')
   fetch()
   tweet_file.close()
