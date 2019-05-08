@@ -13,7 +13,7 @@ def fetch():
     total = 0
     exclude_words = ['My Top'] # words whose tweets should be excluded
     while True:
-      statuses = api.GetUserTimeline(api.GetUser, count=200,
+      statuses = api.GetUserTimeline(screen_name='AyBe', count=200,
                                      max_id=max_id, include_rts=False,
                                      exclude_replies=True)
       new_count = ignored_count = 0
@@ -25,7 +25,7 @@ def fetch():
             tweets.append(format_tweet(s))
             new_count += 1
       total += new_count
-      print "Fetched %d/%d/%d new/old/total." % ( new_count, ignored_count, total)
+      print("Fetched %d/%d/%d new/old/total." % ( new_count, ignored_count, total))
       if new_count == 0:
         break
       max_id = min([s.id for s in statuses]) - 1
@@ -36,7 +36,7 @@ def fetch():
 def format_tweet(tweet):
   exclude_chars = ['"'] # characters to exclude
 
-  tweet = tweet.text.encode('utf-8').replace('&amp;','&') \
+  tweet = tweet.text.replace('&amp;','&') \
                                     .replace('&lt;','<') \
                                     .replace('&gt;','>')
   tweet = ''.join(ch for ch in tweet if ch not in exclude_chars)
@@ -44,6 +44,6 @@ def format_tweet(tweet):
   return tweet
 
 if __name__ == '__main__':
-  tweet_file = open('tweets.pickle', 'w')
+  tweet_file = open('tweets.pickle', 'wb')
   fetch()
   tweet_file.close()

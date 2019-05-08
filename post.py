@@ -15,6 +15,6 @@ if len(m.dict) == 0:
   m.store_triples()
 
 tweet = m.make_tweet()
-print '{}\n----'.format(tweet)
+print('{}\n----'.format(tweet))
 
 status = api.PostUpdate(tweet)
